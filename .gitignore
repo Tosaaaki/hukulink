@@ -1,3 +1,17 @@
+# Python virtual environment directories
 venv/
+.venv/
+
+# Node dependencies
 frontend/node_modules/
+node_modules/
+
+# Python cache and bytecode
 __pycache__/
+*.pyc
+
+# Log files
+*.log
+
+# macOS system files
+.DS_Store
