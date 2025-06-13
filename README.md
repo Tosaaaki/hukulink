@@ -74,7 +74,7 @@
    python backend/manage.py migrate
    python backend/manage.py runserver
    ```
-4. フロントエンドの依存をインストールして起動します。
+4. フロントエンドの依存をインストールして起動します。`.nvmrc` に設定されている **Node.js 20** を選択するため、`cd frontend` 後に `nvm use` を実行します。
    ```bash
    cd frontend
    nvm use
