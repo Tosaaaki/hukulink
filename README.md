@@ -63,12 +63,17 @@
    source venv/bin/activate
    pip install -r backend/requirements.txt
    ```
-2. Django 開発サーバーを起動します。
+2. `.env` ファイルを作成し、`DJANGO_SECRET_KEY` を設定します。
+   ```bash
+   cp .env.example .env
+   # 任意の秘密鍵を入力してください
+   ```
+3. Django 開発サーバーを起動します。
    ```bash
    python backend/manage.py migrate
    python backend/manage.py runserver
    ```
-3. フロントエンドの依存をインストールして起動します。
+4. フロントエンドの依存をインストールして起動します。
    ```bash
    cd frontend
    nvm use
