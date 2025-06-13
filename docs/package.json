@@ -1,0 +1,14 @@
+{
+  "name": "hukulink-docs",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/style.css --minify && cp node_modules/chart.js/dist/chart.umd.js ./dist/chart.js"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1"
+  }
+}
