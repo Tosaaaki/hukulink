@@ -51,3 +51,39 @@
 - GitHubで課題管理を行い、まずはバックエンドAPIを実装します。
 - フロントエンドはReactでプロトタイプを作成し、段階的に機能を結合していきます。
 
+## 9. プロジェクト構成
+- `backend/` : Django プロジェクト。API 開発と管理機能を担当します。
+- `frontend/` : Vite + React テンプレート。ダッシュボードなどの UI を実装します。
+
+## 10. セットアップ方法
+1. Python 仮想環境を作成し、依存パッケージをインストールします。
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r backend/requirements.txt
+   ```
+2. Django 開発サーバーを起動します。
+   ```bash
+   python backend/manage.py migrate
+   python backend/manage.py runserver
+   ```
+3. フロントエンドの依存をインストールして起動します。
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+以上でローカル環境で動作を確認できます。
+
+## 11. API設計の例
+最低限の認証と案件管理を行うエンドポイントを想定します。
+
+| メソッド | パス | 役割 |
+| --- | --- | --- |
+| POST | `/api/signup/` | 新規ユーザー登録 |
+| POST | `/api/login/` | ログインしトークンを返す |
+| GET | `/api/deals/` | 案件一覧を取得 |
+| POST | `/api/deals/` | 案件を登録 |
+
+これらは `rest_framework` を利用した実装を想定しています。
