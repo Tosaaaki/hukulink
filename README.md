@@ -70,6 +70,7 @@
 3. フロントエンドの依存をインストールして起動します。
    ```bash
    cd frontend
+   nvm use
    npm install
    npm run dev
    ```
