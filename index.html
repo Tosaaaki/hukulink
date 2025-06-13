@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&A仲介プラットフォーム | あなたのビジネスの未来を繋ぐ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Serene Blue & Warm Neutrals -->
+    <!-- Application Structure Plan: To create a more "user-first" experience, the tabbed interface has been replaced with a single-page, storytelling layout. It starts with a clear, user-centric hero section that immediately segments the audience ("For Sellers," "For Buyers"). This guides users to relevant information quickly. The structure flows logically from high-level value propositions to detailed features, process explanations, and finally, trust-building elements like legal info and a contact form. This narrative approach is more engaging and intuitive for users unfamiliar with M&A than a report-style tabbed view. A sticky navigation bar ensures easy access to all sections. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Core value proposition -> Goal: Guide User -> Viz/Method: Hero section with two distinct CTA buttons. -> Interaction: Buttons scroll to dedicated sections. -> Justification: Immediately addresses the two primary user types, making the site's purpose clear and actionable from the start. -> Library/Method: Vanilla JS (smooth scroll).
+        - Report Info: Feature list for Sellers/Buyers -> Goal: Organize/Compare -> Viz/Method: Side-by-side feature cards with icons. -> Interaction: Hover effects on cards. -> Justification: Replaces the less intuitive feature tabs with a direct visual comparison, making it easy for users to see what's relevant to them. -> Library/Method: Tailwind CSS.
+        - Report Info: Phased implementation plan -> Goal: Show process -> Viz/Method: Vertical timeline with icons. -> Interaction: None, purely visual. -> Justification: A vertical timeline is a more standard and visually appealing way to represent a process or roadmap compared to the previous tabbed buttons, enhancing clarity. -> Library/Method: Tailwind CSS.
+        - Report Info: KPI data -> Goal: Inform/Compare -> Viz/Method: Donut Charts (Chart.js). -> Interaction: Hover tooltips. -> Justification: This remains an effective way to show proportional data, and the visual design is updated to match the new UI. -> Library/Method: Chart.js.
+        - Report Info: Legal info -> Goal: Build Trust/Inform -> Viz/Method: Accordion component. -> Interaction: Expand/collapse. -> Justification: This is still the best way to present dense legal text without overwhelming the user, maintaining a clean layout. -> Library/Method: Vanilla JS.
+        - Report Info: Contact Request -> Goal: Capture Leads -> Viz/Method: Standard HTML form within a dedicated section. -> Interaction: Form submission with validation. -> Justification: Provides a clear and standard way for users to make inquiries, which is a critical business function. -> Library/Method: Vanilla JS (for fake submission).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; scroll-behavior: smooth; }
+        .hero-gradient { background: linear-gradient(135deg, #e0f2fe, #f0f9ff); }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .sticky-nav a.active {
+            color: #2563eb;
+            font-weight: 600;
+        }
+        form input, form select, form textarea {
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header id="sticky-nav" class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm hidden">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center h-16">
+                <div class="text-lg font-bold text-blue-800">
+                    <a href="#">M&A Platform</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 text-sm text-stone-600">
+                    <a href="#features" class="hover:text-blue-600 transition-colors">サービスの特徴</a>
+                    <a href="#process" class="hover:text-blue-600 transition-colors">ご利用の流れ</a>
+                    <a href="#faq" class="hover:text-blue-600 transition-colors">よくある質問</a>
+                    <a href="#contact" class="hover:text-blue-600 transition-colors">お問い合わせ</a>
+                </div>
+                <div>
+                     <a href="#" class="bg-blue-600 text-white font-semibold py-2 px-5 rounded-full text-sm hover:bg-blue-700 transition-colors">ログイン</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-gradient pt-16 pb-20 md:pt-24 md:pb-28">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-3xl md:text-5xl font-bold text-blue-900 mb-4">ビジネスの未来を、次のステージへ</h1>
+                <p class="max-w-2xl mx-auto text-stone-600 md:text-lg mb-8">私たちは、売り手と買い手双方にとって最高の出会いを創出する、信頼のM&Aプラットフォームです。</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="#seller-section" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg">
+                        事業を譲渡したい方 (売り手)
+                    </a>
+                    <a href="#buyer-section" class="w-full sm:w-auto bg-white text-blue-600 font-bold py-3 px-8 rounded-full hover:bg-blue-50 transition-transform transform hover:scale-105 shadow-lg border border-blue-200">
+                        事業を買収したい方 (買い手)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-800">私たちのプラットフォームが選ばれる理由</h2>
+                    <p class="text-stone-600 mt-2">ユーザー一人ひとりの成功を第一に考えた、直感的で安全な機能を提供します。</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-4 text-3xl">🤝</div>
+                        <h3 class="font-bold text-lg mb-2">信頼できるマッチング</h3>
+                        <p class="text-sm text-stone-600">専門家が介在し、質の高い案件のみを掲載。安心して交渉を進められます。</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-4 text-3xl">🔐</div>
+                        <h3 class="font-bold text-lg mb-2">徹底した秘密保持</h3>
+                        <p class="text-sm text-stone-600">情報は匿名で公開。NDA締結まで企業が特定されることはありません。</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-4 text-3xl">🧭</div>
+                        <h3 class="font-bold text-lg mb-2">専門家によるサポート</h3>
+                        <p class="text-sm text-stone-600">プロセス全体を通じて、経験豊富な専門家があなたをサポートします。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="seller-section" class="py-16 md:py-24 bg-sky-50">
+            <div class="container mx-auto px-6">
+                 <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <span class="text-blue-600 font-semibold">FOR SELLERS</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-blue-800 mt-2 mb-4">大切な事業の価値を、最大化する</h2>
+                        <p class="text-stone-600 mb-6">従業員、取引先、そしてあなたの想いを、最適な後継者へと繋ぎます。私たちは、円滑で満足のいく事業承継を全力で支援します。</p>
+                        <ul class="space-y-4 text-stone-700">
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>無料で案件を登録し、自社の可能性を打診できます。</span></li>
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>経験豊富なアドバイザーが企業価値の評価をサポートします。</span></li>
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>交渉から成約まで、複雑な手続きをワンストップで支援します。</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h4 class="font-bold text-lg text-center mb-4">売り手向けダッシュボード機能</h4>
+                        <div class="space-y-4">
+                            <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                <h5 class="font-semibold">かんたん案件登録</h5>
+                                <p class="text-sm text-stone-600">ガイドに従って入力するだけで、魅力的な案件概要を作成できます。</p>
+                            </div>
+                             <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                <h5 class="font-semibold">進捗の可視化</h5>
+                                <p class="text-sm text-stone-600">「審査中」「公開中」など、案件のステータスをひと目で確認できます。</p>
+                            </div>
+                             <div class="p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+                                <h5 class="font-semibold">安全なメッセージ管理</h5>
+                                <p class="text-sm text-stone-600">興味を持った買い手とのやり取りを、安全な環境で行えます。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="buyer-section" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                 <div class="grid md:grid-cols-2 gap-12 items-center">
+                     <div class="bg-white p-8 rounded-xl shadow-lg order-2 md:order-1">
+                        <h4 class="font-bold text-lg text-center mb-4">買い手向けダッシュボード機能</h4>
+                        <div class="space-y-4">
+                            <div class="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                <h5 class="font-semibold">高精度な案件検索</h5>
+                                <p class="text-sm text-stone-600">業種、地域、事業規模など、詳細な条件で理想の案件を探せます。</p>
+                            </div>
+                             <div class="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                <h5 class="font-semibold">ウォッチリスト</h5>
+                                <p class="text-sm text-stone-600">気になる案件を保存し、後からじっくり比較検討できます。</p>
+                            </div>
+                             <div class="p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+                                <h5 class="font-semibold">NDA締結・管理</h5>
+                                <p class="text-sm text-stone-600">プラットフォーム上でスムーズに秘密保持契約を締結・管理できます。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <span class="text-green-600 font-semibold">FOR BUYERS</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-green-800 mt-2 mb-4">新たな成長機会を、効率的に発見する</h2>
+                        <p class="text-stone-600 mb-6">事業の多角化、エリア拡大、新規市場への参入。あなたの成長戦略に合致する、ポテンシャルの高いビジネスとの出会いを創出します。</p>
+                        <ul class="space-y-4 text-stone-700">
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>非公開案件を含む、質の高い多様な案件にアクセスできます。</span></li>
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>新着案件やおすすめ案件をタイムリーにお知らせします。</span></li>
+                            <li class="flex items-start"><span class="text-green-500 mr-3 mt-1">✔</span><span>デューデリジェンスから契約まで、専門家が伴走します。</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="process" class="py-16 md:py-24 bg-stone-50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-800">ご利用の流れ</h2>
+                    <p class="text-stone-600 mt-2">シンプルで透明性の高いプロセスにより、安心してM&Aを進めることができます。</p>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-blue-200"></div>
+                    <div class="space-y-12">
+                        <div class="md:grid md:grid-cols-2 md:gap-12 items-center">
+                             <div class="text-center md:text-right md:pr-12">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 text-white font-bold mb-2">1</div>
+                                <h3 class="text-xl font-bold text-stone-800">無料登録・相談</h3>
+                                <p class="text-sm text-stone-600 mt-1">まずは無料でユーザー登録。専門家があなたの状況やご希望をヒアリングします。</p>
+                            </div>
+                            <div class="hidden md:block"></div>
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="hidden md:block"></div>
+                            <div class="text-center md:text-left md:pl-12">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 text-white font-bold mb-2">2</div>
+                                <h3 class="text-xl font-bold text-stone-800">案件のマッチング</h3>
+                                <p class="text-sm text-stone-600 mt-1">（売り手）案件を登録し、（買い手）希望に合う案件を検索。最適な候補を探します。</p>
+                            </div>
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-12 items-center">
+                             <div class="text-center md:text-right md:pr-12">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 text-white font-bold mb-2">3</div>
+                                <h3 class="text-xl font-bold text-stone-800">交渉・基本合意</h3>
+                                <p class="text-sm text-stone-600 mt-1">秘密保持契約（NDA）を結び、条件交渉を開始。基本合意を目指します。</p>
+                            </div>
+                             <div class="hidden md:block"></div>
+                        </div>
+                         <div class="md:grid md:grid-cols-2 md:gap-12 items-center">
+                            <div class="hidden md:block"></div>
+                            <div class="text-center md:text-left md:pl-12">
+                                <div class="inline-flex items-center justify-center h-12 w-12 rounded-full bg-blue-600 text-white font-bold mb-2">4</div>
+                                <h3 class="text-xl font-bold text-stone-800">デューデリジェンス・最終契約</h3>
+                                <p class="text-sm text-stone-600 mt-1">専門家による買収監査を経て、最終的な契約条件を確定し、調印します。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="py-16 md:py-24 bg-white">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-800">私たちの成長戦略</h2>
+                    <p class="text-stone-600 mt-2">テクノロジーと専門知識を融合させ、M&Aの未来を創造します。</p>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h3 class="font-bold text-lg mb-4 text-stone-800">開発ロードマップ</h3>
+                        <div class="space-y-6">
+                             <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-4">1</div>
+                                <div>
+                                    <h4 class="font-semibold">フェーズ1: 基盤構築 (MVP)</h4>
+                                    <p class="text-sm text-stone-600">信頼性の高い手動マッチングと、SEOに強いコンテンツハブで市場での認知度を獲得します。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-4">2</div>
+                                <div>
+                                    <h4 class="font-semibold">フェーズ2: 機能強化と自動化</h4>
+                                    <p class="text-sm text-stone-600">オンラインでのNDA締結やユーザー間メッセージングを導入し、利便性を向上させます。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold mr-4">3</div>
+                                <div>
+                                    <h4 class="font-semibold">フェーズ3: AIによる高度化</h4>
+                                    <p class="text-sm text-stone-600">AIを活用した高精度なマッチングアルゴリズムを導入し、成約率と速度を飛躍的に高めます。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="font-bold text-lg mb-4 text-stone-800">成功を測る指標 (KPI)</h3>
+                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="text-center p-4 rounded-lg bg-stone-50">
+                                <h4 class="font-semibold text-stone-700 mb-2 text-sm">認知度とトラフィック</h4>
+                                <div class="chart-container" style="height:250px; max-height:250px;">
+                                    <canvas id="kpiChart1"></canvas>
+                                </div>
+                            </div>
+                            <div class="text-center p-4 rounded-lg bg-stone-50">
+                                 <h4 class="font-semibold text-stone-700 mb-2 text-sm">エンゲージメント</h4>
+                                 <div class="chart-container" style="height:250px; max-height:250px;">
+                                    <canvas id="kpiChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+        </section>
+
+        <section id="faq" class="py-16 md:py-24 bg-stone-50">
+            <div class="container mx-auto px-6 max-w-4xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-800">よくあるご質問</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <button class="accordion-toggle w-full flex justify-between items-center p-5 text-left font-semibold text-stone-800">
+                            <span>相談や登録に費用はかかりますか？</span>
+                            <span class="transform transition-transform duration-300 text-blue-500 text-xl font-light">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-stone-600">ご相談やユーザー登録、売り手様の案件掲載は無料です。私たちは完全成功報酬制を基本としており、M&Aが成約するまで費用は一切いただきません。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <button class="accordion-toggle w-full flex justify-between items-center p-5 text-left font-semibold text-stone-800">
+                            <span>会社の情報が外部に漏れることはありませんか？</span>
+                            <span class="transform transition-transform duration-300 text-blue-500 text-xl font-light">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-stone-600">ご安心ください。初期段階では企業名などを匿名化した情報のみを公開します。具体的な情報開示は、買い手候補と秘密保持契約（NDA）を締結した後のみとなります。</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm">
+                        <button class="accordion-toggle w-full flex justify-between items-center p-5 text-left font-semibold text-stone-800">
+                            <span>地方の中小企業でも利用できますか？</span>
+                             <span class="transform transition-transform duration-300 text-blue-500 text-xl font-light">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-stone-600">はい、もちろんです。私たちは全国の企業様を対象としており、地域に関わらず、すべての企業様に平等な機会を提供することを目指しています。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-blue-800">お問い合わせ</h2>
+                    <p class="text-stone-600 mt-2">ご相談、ご質問など、お気軽にお問い合わせください。</p>
+                </div>
+                <div id="contact-form-container" class="bg-white p-8 rounded-xl shadow-lg border border-stone-200">
+                    <form id="contact-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-stone-700 mb-1">お名前 <span class="text-red-500">*</span></label>
+                                <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="company" class="block text-sm font-medium text-stone-700 mb-1">会社名</label>
+                                <input type="text" id="company" name="company" class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium text-stone-700 mb-1">メールアドレス <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="mb-6">
+                            <label for="inquiry_type" class="block text-sm font-medium text-stone-700 mb-1">お問い合わせ種別 <span class="text-red-500">*</span></label>
+                            <select id="inquiry_type" name="inquiry_type" required class="w-full px-3 py-2 border border-stone-300 rounded-md bg-white focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">選択してください</option>
+                                <option value="seller">事業の売却に関するご相談</option>
+                                <option value="buyer">事業の買収に関するご相談</option>
+                                <option value="other">その他のお問い合わせ</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                             <label for="message" class="block text-sm font-medium text-stone-700 mb-1">お問い合わせ内容 <span class="text-red-500">*</span></label>
+                             <textarea id="message" name="message" rows="5" required class="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors shadow-md">送信する</button>
+                        </div>
+                    </form>
+                </div>
+                 <div id="form-success-message" class="hidden mt-8 text-center p-4 bg-green-100 text-green-800 rounded-lg">
+                    お問い合わせいただきありがとうございます。内容を確認の上、担当者よりご連絡いたします。
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-blue-900 text-white">
+        <div class="container mx-auto py-8 px-6 text-center text-sm">
+            <p>&copy; 2024 M&A Platform. All Rights Reserved.</p>
+            <div class="mt-4 space-x-4">
+                <a href="#" class="hover:underline">利用規約</a>
+                <a href="#" class="hover:underline">プライバシーポリシー</a>
+            </div>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const accordionToggles = document.querySelectorAll('.accordion-toggle');
+    const stickyNav = document.getElementById('sticky-nav');
+    const navLinks = stickyNav.querySelectorAll('a[href^="#"]');
+    const sections = document.querySelectorAll('main section[id], main div[id]');
+    const contactForm = document.getElementById('contact-form');
+    const formContainer = document.getElementById('contact-form-container');
+    const successMessage = document.getElementById('form-success-message');
+
+    let kpiChart1, kpiChart2;
+    let chartsInitialized = false;
+
+    accordionToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const content = toggle.nextElementSibling;
+            const icon = toggle.querySelector('span:last-child');
+            const isOpened = content.style.maxHeight;
+
+            accordionToggles.forEach(t => {
+                t.nextElementSibling.style.maxHeight = null;
+                t.querySelector('span:last-child').textContent = '+';
+                t.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+            });
+
+            if (!isOpened) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.textContent = '-';
+                icon.style.transform = 'rotate(45deg)';
+            }
+        });
+    });
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            formContainer.classList.add('hidden');
+            successMessage.classList.remove('hidden');
+        });
+    }
+
+    const observerOptions = {
+      root: null,
+      threshold: 0.1
+    };
+
+    const navObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+            stickyNav.classList.remove('hidden');
+        } else {
+            stickyNav.classList.add('hidden');
+        }
+      });
+    }, observerOptions);
+
+    const heroSection = document.querySelector('.hero-gradient');
+    if (heroSection) {
+        navObserver.observe(heroSection);
+    }
+    
+    const sectionObserver = new IntersectionObserver((entries) => {
+        let currentSectionId = '';
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                 currentSectionId = entry.target.id;
+            }
+        });
+
+        if (currentSectionId) {
+             navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href').substring(1) === currentSectionId);
+            });
+        }
+
+    }, { rootMargin: "-50% 0px -50% 0px" });
+
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
+
+
+    function initKpiCharts() {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 10,
+                        font: {
+                            size: 10,
+                            family: "'Inter', 'Noto Sans JP', sans-serif"
+                        }
+                    }
+                },
+                tooltip: {
+                    bodyFont: {
+                        family: "'Inter', 'Noto Sans JP', sans-serif"
+                    },
+                    titleFont: {
+                        family: "'Inter', 'Noto Sans JP', sans-serif"
+                    }
+                }
+            }
+        };
+
+        const kpiData1 = {
+            labels: ['ユニークビジター数', 'オーガニック検索', 'コンテンツ滞在時間'],
+            datasets: [{
+                label: '認知度',
+                data: [40, 35, 25],
+                backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd'],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+            }]
+        };
+
+        const kpiData2 = {
+            labels: ['登録ユーザー数', '案件問い合わせ数', 'NDA交換数'],
+            datasets: [{
+                label: 'エンゲージメント',
+                data: [50, 30, 20],
+                backgroundColor: ['#16a34a', '#22c55e', '#4ade80'],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+            }]
+        };
+        
+        const ctx1 = document.getElementById('kpiChart1')?.getContext('2d');
+        if(ctx1) kpiChart1 = new Chart(ctx1, { type: 'doughnut', data: kpiData1, options: chartOptions });
+
+        const ctx2 = document.getElementById('kpiChart2')?.getContext('2d');
+        if(ctx2) kpiChart2 = new Chart(ctx2, { type: 'doughnut', data: kpiData2, options: chartOptions });
+        chartsInitialized = true;
+    }
+    
+    const kpiObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !chartsInitialized) {
+                initKpiCharts();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const kpiSection = document.getElementById('strategy');
+    if (kpiSection) {
+        kpiObserver.observe(kpiSection);
+    }
+
+});
+</script>
+</body>
+</html>
