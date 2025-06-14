@@ -1,11 +1,19 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Home from './Home.jsx'
+import AppLayout from './layouts/AppLayout.jsx'
+import Home from './pages/Home.jsx'
+import Login from './pages/Login.jsx'
+import NotFound from './pages/NotFound.jsx'
 
-// Home ルートを定義
+// ルーティング設定
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <AppLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'login', element: <Login /> },
+      { path: '*', element: <NotFound /> },
+    ],
   },
 ])
 
