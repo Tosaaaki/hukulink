@@ -1,0 +1,25 @@
+{
+  "name": "hukulink",
+  "version": "1.0.0",
+  "description": "本リポジトリは、中小企業向けM&Aプラットフォームの開発メモを管理します。以下は構想書の要約と改善提案です。 このリポジトリは MIT ライセンスの下で公開されています。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tailwindcss-cli -i ./docs/src/input.css -o ./docs/dist/style.css --minify && cp ./node_modules/chart.js/dist/chart.umd.js ./docs/dist/chart.js",
+    "dev": "tailwindcss-cli -i ./docs/src/input.css -o ./docs/dist/style.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "tailwindcss": "^4.1.10",
+    "tailwindcss-cli": "^0.1.2"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.9"
+  }
+}
