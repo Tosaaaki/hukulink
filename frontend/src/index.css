@@ -1,7 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  scroll-behavior: smooth;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+}
+
+.sticky-nav a.active {
+  color: #2563eb;
+  font-weight: 600;
 }
