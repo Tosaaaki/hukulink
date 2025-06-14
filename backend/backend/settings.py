@@ -29,7 +29,13 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["hukulink.awana.co.jp", "localhost"]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://hukulink.awana.co.jp",
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Application definition

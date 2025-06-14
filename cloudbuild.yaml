@@ -1,0 +1,30 @@
+steps:
+# ---------- FRONTEND ----------
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','gcr.io/$PROJECT_ID/hukulink-frontend:$COMMIT_SHA','frontend']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: [
+    'run','deploy','hukulink-frontend',
+    '--image','gcr.io/$PROJECT_ID/hukulink-frontend:$COMMIT_SHA',
+    '--region','asia-northeast1',
+    '--platform','managed',
+    '--allow-unauthenticated',
+    '--port','8080'
+  ]
+
+# ---------- BACKEND ----------
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build','-t','gcr.io/$PROJECT_ID/hukulink-backend:$COMMIT_SHA','backend']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: [
+    'run','deploy','hukulink-backend',
+    '--image','gcr.io/$PROJECT_ID/hukulink-backend:$COMMIT_SHA',
+    '--region','asia-northeast1',
+    '--platform','managed',
+    '--allow-unauthenticated',
+    '--port','8080',
+    '--set-env-vars','DATABASE_URL=${_DATABASE_URL},DJANGO_SECRET_KEY=${_DJANGO_SECRET_KEY}'
+  ]
+images:
+- 'gcr.io/$PROJECT_ID/hukulink-frontend:$COMMIT_SHA'
+- 'gcr.io/$PROJECT_ID/hukulink-backend:$COMMIT_SHA'
